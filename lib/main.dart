@@ -1,5 +1,6 @@
 import 'package:expenses/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 main() => runApp(ExpensesApp());
 
@@ -37,7 +38,7 @@ class MyHomePage extends StatelessWidget {
         title: Text('Despesas Pessoais'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        // mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
@@ -64,19 +65,65 @@ class MyHomePage extends StatelessWidget {
                         color: Colors.purple,
                         width: 2,
                       )),
-                      child: Text(e.value.toString()),
+                      child: Text(
+                        'R\$ ${e.value.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.purple),
+                      ),
                     ),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(e.title),
-                        Text(e.date.toString()),
+                        Text(
+                          e.title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          DateFormat('d MMM y').format(e.date),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
                       ],
                     ),
                   ],
                 ),
               );
             }).toList(),
-          )
+          ),
+          Card(
+            elevation: 5,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  const TextField(
+                    decoration: InputDecoration(labelText: 'Título'),
+                  ),
+                  const TextField(
+                    decoration: InputDecoration(labelText: 'Valor (R\$)'),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          primary: Colors.purple,
+                        ),
+                        onPressed: () => {},
+                        child: const Text('Nova Transação'),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
