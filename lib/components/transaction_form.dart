@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
 class TransactionForm extends StatelessWidget {
-  // final titleController = TextEditingController();
-  // final valueController = TextEditingController();
+  final titleController = TextEditingController();
+  final valueController = TextEditingController();
 
-  const TransactionForm({
+  final void Function(String, double) onSubmit;
+
+  // after remove titleController and valueController need insert const
+  TransactionForm(
+    this.onSubmit, {
     Key? key,
   }) : super(key: key);
 
@@ -16,12 +20,12 @@ class TransactionForm extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            const TextField(
-              // controller: titleController,
+            TextField(
+              controller: titleController,
               decoration: InputDecoration(labelText: 'Título'),
             ),
-            const TextField(
-              // controller: titleController,
+            TextField(
+              controller: valueController,
               decoration: InputDecoration(labelText: 'Valor (R\$)'),
             ),
             Row(
@@ -31,7 +35,14 @@ class TransactionForm extends StatelessWidget {
                   style: TextButton.styleFrom(
                     primary: Colors.purple,
                   ),
-                  onPressed: () => {},
+                  onPressed: () {
+                    final title = titleController.text;
+                    final value = double.tryParse(
+                          valueController.text.toString(),
+                        ) ??
+                        0.0;
+                    onSubmit(title, value);
+                  },
                   child: const Text('Nova Transação'),
                 ),
               ],
