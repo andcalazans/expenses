@@ -1,13 +1,11 @@
 import 'dart:math';
 
-import 'package:expenses/components/transaction_form.dart';
-// import 'package:expenses/components/transaction_user.dart';
-
-import 'package:expenses/models/transaction.dart';
-
-import 'package:flutter/material.dart';
-
+import 'components/chart.dart';
+import 'components/transaction_form.dart';
 import 'components/transaction_list.dart';
+import 'models/transaction.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 main() => runApp(ExpensesApp());
 
@@ -36,6 +34,11 @@ class ExpensesApp extends StatelessWidget {
           ),
         ),
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: [const Locale('pt', 'BR')],
     );
   }
 }
@@ -46,18 +49,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _transactions = [
+  final List<Transaction> _transactions = [
+    Transaction(
+      id: 'to',
+      title: 'Conta muito antiga',
+      value: 3310.90,
+      date: DateTime.now().subtract(
+        const Duration(days: 33),
+      ),
+    ),
     Transaction(
       id: 't1',
       title: 'Novo Tênis de Corrida',
       value: 310.90,
-      date: DateTime.now(),
+      date: DateTime.now().subtract(
+        const Duration(days: 3),
+      ),
     ),
     Transaction(
       id: 't2',
       title: 'Conta de Luz',
       value: 739.20,
-      date: DateTime.now(),
+      date: DateTime.now().subtract(
+        const Duration(days: 1),
+      ),
     ),
     // Transaction(
     //   id: 't3',
@@ -109,6 +124,16 @@ class _MyHomePageState extends State<MyHomePage> {
     // )
   ];
 
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((element) {
+      return element.date.isAfter(
+        DateTime.now().subtract(
+          const Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+
   _addTransaction(String title, double value) {
     final newTransaction = Transaction(
         id: Random().nextDouble().toString(),
@@ -155,11 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Container(
             // width: double.infinity,
-            child: const Card(
-              color: Colors.cyan,
-              child: Text('Gráfico'),
-              elevation: 2,
-            ),
+            child: Chart(_recentTransactions),
           ),
           TransactionList(transactions: _transactions),
           // TransactionUser(),
