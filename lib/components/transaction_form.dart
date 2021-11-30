@@ -30,7 +30,7 @@ class _TransactionFormState extends State<TransactionForm> {
       return;
     }
 
-    widget.onSubmit(title, value, _selectedDate!);
+    widget.onSubmit(title, value, _selectedDate);
   }
 
   _showDatePicker() {

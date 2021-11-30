@@ -92,34 +92,67 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  bool _showChart = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Despesas Pessoais',
-            style: TextStyle(
-                // fontFamily: 'OpenSans',
-                // fontWeight: FontWeight.w700,
-                )),
-        actions: [
+    // Orientação
+    // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final appBar = AppBar(
+      title: const Text('Despesas Pessoais',
+          style: TextStyle(
+              // fontFamily: 'OpenSans',
+              // fontWeight: FontWeight.w700,
+              )),
+      actions: [
+        if (isLandscape)
           IconButton(
-            onPressed: () => _openTransactionFormModal(context),
-            icon: const Icon(Icons.add),
-          )
-        ],
-      ),
-      body: Column(
-        // mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            // width: double.infinity,
-            child: Chart(_recentTransactions),
+            onPressed: () {
+              setState(() {
+                _showChart = !_showChart;
+              });
+            },
+            icon: Icon(_showChart ? Icons.list : Icons.bar_chart),
           ),
-          TransactionList(
-              transactions: _transactions, onRemove: _deleteTransaction),
-          // TransactionUser(),
-        ],
+        IconButton(
+          onPressed: () => _openTransactionFormModal(context),
+          icon: const Icon(Icons.add),
+        )
+      ],
+    );
+
+    //  appBar.preferredSize.height -> Altura do Appbar
+    final availableHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+
+    return Scaffold(
+      appBar: appBar,
+      body: SingleChildScrollView(
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (_showChart || !isLandscape)
+              Container(
+                height: availableHeight * (!isLandscape ? 0.25 : 0.7),
+                // width: double.infinity,
+
+                child: Chart(_recentTransactions),
+              ),
+            if (!_showChart || !isLandscape)
+              Container(
+                height: availableHeight * 0.75,
+                child: TransactionList(
+                    transactions: _transactions, onRemove: _deleteTransaction),
+              ),
+            // TransactionUser(),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
