@@ -49,80 +49,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactions = [
-    Transaction(
-      id: 'to',
-      title: 'Conta muito antiga',
-      value: 3310.90,
-      date: DateTime.now().subtract(
-        const Duration(days: 33),
-      ),
-    ),
-    Transaction(
-      id: 't1',
-      title: 'Novo Tênis de Corrida',
-      value: 310.90,
-      date: DateTime.now().subtract(
-        const Duration(days: 3),
-      ),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de Luz',
-      value: 739.20,
-      date: DateTime.now().subtract(
-        const Duration(days: 1),
-      ),
-    ),
-    // Transaction(
-    //   id: 't3',
-    //   title: 'Conta de Luz',
-    //   value: 739.20,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't4',
-    //   title: 'Conta de Luz',
-    //   value: 739.20,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't5',
-    //   title: 'Conta de Luz',
-    //   value: 739.20,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't6',
-    //   title: 'Conta de Luz',
-    //   value: 739.20,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't6',
-    //   title: 'Conta de Luz',
-    //   value: 739.20,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't6',
-    //   title: 'Conta de Luz',
-    //   value: 739.20,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't6',
-    //   title: 'Conta de Luz',
-    //   value: 739.20,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't6',
-    //   title: 'Conta de Luz',
-    //   value: 739.20,
-    //   date: DateTime.now(),
-    // )
-  ];
+  final List<Transaction> _transactions = [];
 
   List<Transaction> get _recentTransactions {
     return _transactions.where((element) {
@@ -134,12 +61,13 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  _addTransaction(String title, double value) {
+  _addTransaction(String title, double value, DateTime date) {
     final newTransaction = Transaction(
-        id: Random().nextDouble().toString(),
-        title: title,
-        value: value,
-        date: DateTime.now());
+      id: Random().nextDouble().toString(),
+      title: title,
+      value: value,
+      date: date,
+    );
 
     setState(() {
       _transactions.add(newTransaction);
@@ -147,6 +75,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Remove a coisa que está mais na frente da tela (com maior índice: zindex)
     Navigator.of(context).pop();
+  }
+
+  _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) => id == tr.id);
+    });
   }
 
   _openTransactionFormModal(BuildContext context) {
@@ -182,7 +116,8 @@ class _MyHomePageState extends State<MyHomePage> {
             // width: double.infinity,
             child: Chart(_recentTransactions),
           ),
-          TransactionList(transactions: _transactions),
+          TransactionList(
+              transactions: _transactions, onRemove: _deleteTransaction),
           // TransactionUser(),
         ],
       ),
