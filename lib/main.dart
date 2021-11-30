@@ -99,8 +99,9 @@ class _MyHomePageState extends State<MyHomePage> {
     // Orientação
     // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-    bool isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    final mediaQuery = MediaQuery.of(context);
+
+    bool isLandscape = mediaQuery.orientation == Orientation.landscape;
 
     final appBar = AppBar(
       title: const Text('Despesas Pessoais',
@@ -126,9 +127,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     //  appBar.preferredSize.height -> Altura do Appbar
-    final availableHeight = MediaQuery.of(context).size.height -
+    final availableHeight = mediaQuery.size.height -
         appBar.preferredSize.height -
-        MediaQuery.of(context).padding.top;
+        mediaQuery.padding.top;
 
     return Scaffold(
       appBar: appBar,
@@ -139,14 +140,14 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             if (_showChart || !isLandscape)
               Container(
-                height: availableHeight * (!isLandscape ? 0.25 : 0.7),
+                height: availableHeight * (!isLandscape ? 0.25 : 0.85),
                 // width: double.infinity,
 
                 child: Chart(_recentTransactions),
               ),
             if (!_showChart || !isLandscape)
               Container(
-                height: availableHeight * 0.75,
+                height: availableHeight * (!isLandscape ? 0.75 : 1),
                 child: TransactionList(
                     transactions: _transactions, onRemove: _deleteTransaction),
               ),
